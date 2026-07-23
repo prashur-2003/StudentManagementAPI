@@ -1,9 +1,17 @@
-from flask import Flask,request,jsonify
+from flask import Flask, request, jsonify
 import firebase_admin
-from firebase_admin import credentials, firestore,auth
-#create flask application
+from firebase_admin import credentials, firestore, auth
+import os
+import json
+
 app = Flask(__name__)
-cred = credentials.Certificate("firebase-key.json")
+
+if os.environ.get("FIREBASE_CREDENTIALS"):
+    firebase_json = json.loads(os.environ["FIREBASE_CREDENTIALS"])
+    cred = credentials.Certificate(firebase_json)
+else:
+    cred = credentials.Certificate("firebase-key.json")
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 from functools import wraps
